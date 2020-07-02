@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_club_date_added
+    - node.type.club
+  module:
+    - datetime
+id: node.club.field_club_date_added
+field_name: field_club_date_added
+entity_type: node
+bundle: club
+label: 'Date added'
+description: 'Date the club was added.'
+required: true
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains rusa_imports.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function rusa_clubs_import_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the rusa_imports module.
+    case 'help.page.rusa_imports':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('RUSA Clubs importer') . '</p>';
+      return $output;
+
+    default:
+  }
+}

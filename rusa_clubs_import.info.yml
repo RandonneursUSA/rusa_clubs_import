@@ -1,0 +1,9 @@
+name: rusa_clubs_import
+type: module
+description: Onetime import clubs into Drupal
+core_version_requirement: ^8 || ^9
+package: RUSA
+version: 8.x-0.2.0
+
+dependencies:
+  - rusa_api:rusa_api

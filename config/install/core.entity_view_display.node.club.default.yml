@@ -1,0 +1,60 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.club.body
+    - field.field.node.club.field_club_acpcode
+    - field.field.node.club.field_club_date_added
+    - field.field.node.club.field_club_state
+    - field.field.node.club.field_club_status
+    - field.field.node.club.field_club_website
+    - node.type.club
+  module:
+    - link
+    - text
+    - user
+id: node.club.default
+targetEntityType: node
+bundle: club
+mode: default
+content:
+  body:
+    type: text_default
+    weight: 2
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  field_club_acpcode:
+    type: number_integer
+    weight: 0
+    region: content
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+  field_club_state:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_club_website:
+    type: link
+    weight: 3
+    region: content
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+hidden:
+  field_club_date_added: true
+  field_club_status: true
+  links: true

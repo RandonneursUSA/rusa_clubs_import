@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_club_website
+    - node.type.club
+  module:
+    - link
+id: node.club.field_club_website
+field_name: field_club_website
+entity_type: node
+bundle: club
+label: Website
+description: 'The URL of this club''s website'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link

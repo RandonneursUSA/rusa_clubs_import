@@ -2,13 +2,6 @@ rusa_clubs_import:
   path: '/rusa/import/clubs'
   defaults:
     _title: 'Import Clubs data into Drupal'
-    _form: '\Drupal\rusa_clubs_import\RusaClubsImportForm'
+    _form: '\Drupal\rusa_clubs_import\Form\RusaClubsImportForm'
   requirements:
-    _access: 'TRUE'
-rusa_clubs_test:
-  path: '/rusa/import/test'
-  defaults:
-    _title: 'Import Test data into Drupal'
-    _form: '\Drupal\rusa_clubs_import\RusaClubsTestForm'
-  requirements:
-    _access: 'TRUE'
+    _permission: 'import club data'

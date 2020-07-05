@@ -7,49 +7,54 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Term;  
 use Drupal\node\Entity\Node;
 use Drupal\rusa_api\RusaClubs;
-
+use Drupal\rusa_api\RusaStatesBuild;
 
 class RusaClubsImportForm extends FormBase {
 
-  // Required function
-  public function getFormId() {
-    return 'rusa_clubs_import_form';
-  }
+    // Required function
+    public function getFormId() {
+        return 'rusa_clubs_import_form';
+    }
 
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
+    public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $form['clubs'] = [
-      '#type'   => 'item',
-      '#markup' => $this->t("Click the Import button to begin the transfer of Club data into Drupal"),
-    ];
+        $form['clubs'] = [
+            '#type'   => 'item',
+            '#markup' => $this->t("Click the Import button to begin the transfer of Club data into Drupal"),
+        ];
 
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Import'),
-    ];
+        $form['actions']['submit'] = [
+            '#type' => 'submit',
+            '#value' => $this->t('Import'),
+        ];
 
-    $form['#attributes']['class'][] = 'rusa-form';
-    $form['#attached']['library'][] = 'rusa_api/rusa_style';
+        $form['#attributes']['class'][] = 'rusa-form';
+        $form['#attached']['library'][] = 'rusa_api/rusa_style';
 
-    return $form;
-  }
+        return $form;
+    }
 
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+    public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $clobj  = new RusaClubs();
-    $clubs  = $clobj->getClubsArray();
+        $clobj  = new RusaClubs();
+        $clubs  = $clobj->getClubsArray();
+
+        // Build the states vocabulary. This is pretty quick so no need to batch
+        $states = new RusaStatesBuild();
+        $states->buildStates();
+	
 	
 		// Setup batch process
 		$batch = [
-    	'title' => $this->t('Importing clubs'),
-      'operations' => [['Drupal\rusa_clubs_import\RusaClubsImportForm::batchStart', ['clubs']]],
-      'finished'   => 'Drupal\rusa_clubs_import\RusaClubsImportForm::batchFinished',
-    ];
+    	    'title' => $this->t('Importing clubs'),
+            'operations' => [['Drupal\rusa_clubs_import\RusaClubsImportForm::batchStart', ['clubs']]],
+            'finished'   => 'Drupal\rusa_clubs_import\RusaClubsImportForm::batchFinished',
+        ];
 
-    foreach ($clubs as $club) {
-      $batch['operations'][] =  ['Drupal\rusa_clubs_import\RusaClubsImportForm::batchProcess', [$club]];
-    }
+        foreach ($clubs as $club) {
+            $batch['operations'][] =  ['Drupal\rusa_clubs_import\RusaClubsImportForm::batchProcess', [$club]];
+        }
 
 		batch_set($batch);
 	}
@@ -144,3 +149,5 @@ class RusaClubsImportForm extends FormBase {
   }
   
 }
+
+

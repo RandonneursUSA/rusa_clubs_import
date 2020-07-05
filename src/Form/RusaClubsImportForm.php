@@ -21,7 +21,10 @@ class RusaClubsImportForm extends FormBase {
 
         $form['clubs'] = [
             '#type'   => 'item',
-            '#markup' => $this->t("Click the Import button to begin the transfer of Club data into Drupal"),
+            '#markup' => $this->t("Before you can import the Clubs you must build the States vocabulary." .
+                                  "<br />After that you can build the clubs." .
+                                  "<br />You can import the clubs again anytime to get any changes in GDBM. " .
+                                  "<br >But you can only build the States."),
         ];
 
 
@@ -50,6 +53,7 @@ class RusaClubsImportForm extends FormBase {
         
             // Build the states vocabulary. This is pretty quick so no need to batch
             $this->buildStates();
+            $this->messenger()->setStatus($this->t('The States vocabulary has been built.');
         }
         else {
         
@@ -69,6 +73,8 @@ class RusaClubsImportForm extends FormBase {
             }
 
             batch_set($batch);
+            $this->messenger()->setStatus($this->t('The Clubs have been imported.');
+
         }
 	}
 

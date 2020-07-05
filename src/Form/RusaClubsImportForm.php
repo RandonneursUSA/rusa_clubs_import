@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\rusa_clubs_import;
+namespace Drupal\rusa_clubs_import\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;

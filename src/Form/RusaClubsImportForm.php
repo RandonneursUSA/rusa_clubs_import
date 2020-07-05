@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Term;  
 use Drupal\node\Entity\Node;
 use Drupal\rusa_api\RusaClubs;
-use Drupal\rusa_api\RusaStatesBuild;
+use Drupal\rusa_clubs_import\RusaStatesBuild;
 
 class RusaClubsImportForm extends FormBase {
 
@@ -24,6 +24,15 @@ class RusaClubsImportForm extends FormBase {
             '#markup' => $this->t("Click the Import button to begin the transfer of Club data into Drupal"),
         ];
 
+
+        $form['choice'] = [
+            '#type'    => 'radios',
+            '#options' => [
+                'states' => $this->t('Build States'),
+                'clubs'  => $this->t('Import Clubs'),
+            ]
+        ];
+
         $form['actions']['submit'] = [
             '#type' => 'submit',
             '#value' => $this->t('Import'),
@@ -37,26 +46,30 @@ class RusaClubsImportForm extends FormBase {
 
     public function submitForm(array &$form, FormStateInterface $form_state) {
 
-        $clobj  = new RusaClubs();
-        $clubs  = $clobj->getClubsArray();
-
-        // Build the states vocabulary. This is pretty quick so no need to batch
-        $states = new RusaStatesBuild();
-        $states->buildStates();
-	
-	
-		// Setup batch process
-		$batch = [
-    	    'title' => $this->t('Importing clubs'),
-            'operations' => [['Drupal\rusa_clubs_import\Form\RusaClubsImportForm::batchStart', ['clubs']]],
-            'finished'   => 'Drupal\rusa_clubs_import\Foem\RusaClubsImportForm::batchFinished',
-        ];
-
-        foreach ($clubs as $club) {
-            $batch['operations'][] =  ['Drupal\rusa_clubs_import\Form\RusaClubsImportForm::batchProcess', [$club]];
+        if ($form_state->getValue('choice') == 'states') {
+        
+            // Build the states vocabulary. This is pretty quick so no need to batch
+            $this->buildStates();
         }
+        else {
+        
+            // Get the clubs from GDBM
+            $clobj  = new RusaClubs();
+            $clubs  = $clobj->getClubsArray();
+    
+            // Setup batch process
+            $batch = [
+                'title' => $this->t('Importing clubs'),
+                'operations' => [['Drupal\rusa_clubs_import\Form\RusaClubsImportForm::batchStart', ['clubs']]],
+                'finished'   => 'Drupal\rusa_clubs_import\Foem\RusaClubsImportForm::batchFinished',
+            ];
 
-		batch_set($batch);
+            foreach ($clubs as $club) {
+                $batch['operations'][] =  ['Drupal\rusa_clubs_import\Form\RusaClubsImportForm::batchProcess', [$club]];
+            }
+
+            batch_set($batch);
+        }
 	}
 
 	public static function batchStart($clubs, &$context) {
@@ -147,6 +160,23 @@ class RusaClubsImportForm extends FormBase {
       	    return  array_shift($result);
 		}
     }
+
+    protected function buildStates() {
+        $states = RusaStatesBuild::getStates();
+  
+        foreach ($states as $st => $state) {
+          $term = Term::create(array(
+            'parent'                    => array(),
+            'name'                      => $state['name'],
+            'vid'                       => 'states',
+            'field_state_abbreviation'  => $st,
+            'field_state_code'          => $state['code'],
+            ));
+          $term->save();
+        }
+    }
+
+
   
 }
 

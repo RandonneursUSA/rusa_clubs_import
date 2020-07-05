@@ -53,7 +53,7 @@ class RusaClubsImportForm extends FormBase {
         
             // Build the states vocabulary. This is pretty quick so no need to batch
             $this->buildStates();
-            $this->messenger()->setStatus($this->t('The States vocabulary has been built.'));
+            $this->messenger()->addStatus($this->t('The States vocabulary has been built.'));
         }
         else {
         
@@ -73,7 +73,7 @@ class RusaClubsImportForm extends FormBase {
             }
 
             batch_set($batch);
-            $this->messenger()->setStatus($this->t('The Clubs have been imported.'));
+            $this->messenger()->addStatus($this->t('The Clubs have been imported.'));
 
         }
 	}
